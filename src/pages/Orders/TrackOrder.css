@@ -1,0 +1,374 @@
+.track-page {
+  max-width: 1000px;
+  min-height: 70vh;
+  margin: 0 auto;
+  padding: 30px 20px 55px;
+  color: #242424;
+}
+
+.track-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 22px;
+  color: #555;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.track-back:hover {
+  color: #e68a00;
+}
+
+.track-header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 25px;
+}
+
+.track-header-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 62px;
+  height: 62px;
+  color: #242424;
+  background: #fff3e0;
+  border-radius: 15px;
+  font-size: 26px;
+}
+
+.track-eyebrow {
+  color: #d97706;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.track-header h1 {
+  margin: 4px 0;
+  font-size: clamp(25px, 4vw, 32px);
+  font-weight: 800;
+}
+
+.track-header p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.track-card,
+.track-message {
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  box-shadow: 0 4px 15px rgba(36, 36, 36, 0.06);
+}
+
+.track-order-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 25px;
+  background: #fffdf9;
+  border-bottom: 1px solid #eee;
+}
+
+.track-label {
+  color: #6b7280;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.track-order-summary h2 {
+  margin: 6px 0;
+  font-size: 22px;
+  overflow-wrap: anywhere;
+}
+
+.track-order-summary p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.track-status {
+  padding: 8px 13px;
+  border-radius: 30px;
+  background: #fffbeb;
+  color: #92400e;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: capitalize;
+}
+
+.track-status.status-confirmed,
+.track-status.status-shipped {
+  color: #1d4ed8;
+  background: #eff6ff;
+}
+
+.track-status.status-delivered {
+  color: #166534;
+  background: #f0fdf4;
+}
+
+.track-status.status-cancelled,
+.track-status.status-canceled {
+  color: #991b1b;
+  background: #fef2f2;
+}
+
+.track-info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  padding: 23px 25px;
+  border-bottom: 1px solid #eee;
+}
+
+.track-info-grid > div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+  min-width: 0;
+}
+
+.track-info-grid span {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.track-info-grid strong {
+  font-size: 14px;
+  font-weight: 800;
+  text-transform: capitalize;
+  overflow-wrap: anywhere;
+}
+
+.track-progress {
+  padding: 27px 25px;
+}
+
+.track-progress > h3 {
+  margin: 0 0 25px;
+  font-size: 19px;
+  font-weight: 800;
+}
+
+.track-timeline {
+  display: flex;
+  flex-direction: column;
+}
+
+.track-step {
+  position: relative;
+  display: flex;
+  gap: 17px;
+  min-height: 100px;
+}
+
+.track-step:not(:last-child)::before {
+  position: absolute;
+  top: 43px;
+  left: 19px;
+  width: 3px;
+  height: calc(100% - 43px);
+  content: "";
+  background: #e5e7eb;
+}
+
+.track-step.is-done:not(:last-child)::before {
+  background: #16a34a;
+}
+
+.track-step-marker {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex: 0 0 41px;
+  align-items: center;
+  justify-content: center;
+  width: 41px;
+  height: 41px;
+  color: #9ca3af;
+  background: #f3f4f6;
+  border: 2px solid #e5e7eb;
+  border-radius: 50%;
+  font-size: 16px;
+}
+
+.track-step.is-done .track-step-marker {
+  color: #fff;
+  background: #16a34a;
+  border-color: #16a34a;
+}
+
+.track-step.is-current .track-step-marker {
+  box-shadow: 0 0 0 5px #dcfce7;
+}
+
+.track-step-content {
+  padding: 3px 0 22px;
+}
+
+.track-step-content h4 {
+  margin: 0 0 5px;
+  color: #242424;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.track-step-content p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.track-current-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 9px;
+  padding: 5px 9px;
+  color: #166534;
+  background: #f0fdf4;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.track-cancelled {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  padding: 17px;
+  color: #991b1b;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 10px;
+}
+
+.track-cancelled > svg {
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+.track-cancelled strong {
+  font-size: 15px;
+}
+
+.track-cancelled p {
+  margin: 6px 0 0;
+  color: #7f1d1d;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.track-live-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 17px 25px;
+  color: #166534;
+  background: #f0fdf4;
+  border-top: 1px solid #dcfce7;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.track-live-note svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.track-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 45px 22px;
+  text-align: center;
+}
+
+.track-message > svg {
+  color: #e68a00;
+  font-size: 30px;
+}
+
+.track-message h2,
+.track-message p {
+  margin: 0;
+}
+
+.track-message p {
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.track-spinner {
+  width: 38px;
+  height: 38px;
+  border: 4px solid #ffe0b2;
+  border-top-color: #ff9900;
+  border-radius: 50%;
+  animation: track-spin 0.8s linear infinite;
+}
+
+@keyframes track-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 600px) {
+  .track-page {
+    padding: 20px 12px 35px;
+  }
+
+  .track-header {
+    gap: 12px;
+  }
+
+  .track-header-icon {
+    width: 49px;
+    height: 49px;
+    font-size: 21px;
+  }
+
+  .track-header h1 {
+    font-size: 24px;
+  }
+
+  .track-header p {
+    font-size: 12px;
+  }
+
+  .track-order-summary {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 20px 17px;
+  }
+
+  .track-info-grid {
+    grid-template-columns: 1fr;
+    gap: 17px;
+    padding: 20px 17px;
+  }
+
+  .track-progress {
+    padding: 23px 17px;
+  }
+
+  .track-live-note {
+    padding: 15px 17px;
+  }
+}

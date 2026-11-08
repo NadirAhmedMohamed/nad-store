@@ -1,0 +1,18 @@
+{
+  "short_name": "Nad Store",
+  "name": "Nad Store | Shop Smarter",
+  "description": "Discover more. Shop smarter. Explore quality products at Nad Store.",
+  "icons": [
+    {
+      "src": "nad-store-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "theme_color": "#242424",
+  "background_color": "#F5F6F8"
+}

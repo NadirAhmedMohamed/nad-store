@@ -1,0 +1,89 @@
+
+:root {
+  /* =========================
+     NAD STORE — BRAND
+  ========================= */
+  --primary: #FF9900;
+  --primary-hover: #E68A00;
+  --primary-light: #FFF3E0;
+
+  --secondary: #242424;
+  --secondary-light: #333333;
+
+  --accent: #FF9900;
+  --accent-light: #FFF3E0;
+
+  /* Brand aliases */
+  --brand-primary: #FF9900;
+  --brand-dark: #242424;
+  --brand-light: #FFFFFF;
+
+  /* =========================
+     STATUS
+  ========================= */
+  --success: #16A34A;
+  --success-light: #F0FDF4;
+
+  --warning: #F59E0B;
+  --warning-light: #FFFBEB;
+
+  --danger: #DC2626;
+  --danger-light: #FEF2F2;
+
+  /* =========================
+     BACKGROUND
+  ========================= */
+  --background: #F5F6F8;
+  --surface: #FFFFFF;
+  --surface-hover: #F9FAFB;
+
+  /* =========================
+     TEXT
+  ========================= */
+  --text: #242424;
+  --text-secondary: #4B5563;
+  --text-muted: #6B7280;
+  --text-white: #FFFFFF;
+
+  /* =========================
+     BORDER
+  ========================= */
+  --border: #E5E7EB;
+  --border-light: #F3F4F6;
+
+  /* =========================
+     SHADOW
+  ========================= */
+  --shadow-sm: 0 1px 3px rgba(36, 36, 36, 0.06);
+  --shadow-md: 0 4px 15px rgba(36, 36, 36, 0.08);
+  --shadow-lg: 0 10px 35px rgba(36, 36, 36, 0.12);
+
+  /* =========================
+     RADIUS
+  ========================= */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+
+  /* =========================
+     SPACING
+  ========================= */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* =========================
+     COMPONENTS
+  ========================= */
+  --header-height: 60px;
+  --content-width: 1440px;
+  --transition: 0.25s ease;
+}

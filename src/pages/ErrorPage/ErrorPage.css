@@ -1,0 +1,724 @@
+/* =========================================
+   NAD STORE — PREMIUM ERROR PAGE
+========================================= */
+
+.error-page {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 55px 24px 30px;
+  background: var(--background);
+  color: var(--text);
+  font-family: "Inter", "Cairo", sans-serif;
+  isolation: isolate;
+}
+
+/* BACKGROUND DECORATION */
+
+.error-background-shape {
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: 50%;
+}
+
+.error-shape-one {
+  width: 520px;
+  height: 520px;
+  top: -270px;
+  right: -170px;
+  background: var(--primary-light);
+  opacity: 0.65;
+  filter: blur(2px);
+}
+
+.error-shape-two {
+  width: 420px;
+  height: 420px;
+  bottom: -250px;
+  left: -150px;
+  border: 1px solid var(--border);
+  opacity: 0.7;
+}
+
+/* MAIN CONTAINER */
+
+.error-container {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* BRAND */
+
+.error-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  color: var(--secondary);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.error-brand:hover {
+  transform: translateY(-2px);
+}
+
+.error-brand-icon {
+  width: 43px;
+  height: 43px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary);
+  color: #fff;
+  border-radius: var(--radius-md);
+  font-size: 19px;
+  box-shadow: 0 5px 15px rgba(255, 153, 0, 0.2);
+}
+
+.error-brand-name {
+  font-size: 23px;
+  font-weight: 700;
+  letter-spacing: -0.8px;
+}
+
+.error-brand-name strong {
+  color: var(--primary);
+}
+
+/* MAIN CONTENT */
+
+.error-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 65px;
+  padding: 65px 0 55px;
+}
+
+/* =========================================
+   ILLUSTRATION
+========================================= */
+
+.error-visual {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.error-visual-circle {
+  width: min(100%, 440px);
+  aspect-ratio: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    var(--surface) 0%,
+    var(--background) 68%,
+    transparent 69%
+  );
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-lg);
+}
+
+.error-visual-glow {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: var(--primary-light);
+  filter: blur(65px);
+  opacity: 0.8;
+}
+
+.error-number {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -56%);
+  font-size: clamp(115px, 17vw, 205px);
+  font-weight: 900;
+  letter-spacing: -15px;
+  line-height: 1;
+  color: var(--secondary);
+  opacity: 0.055;
+  user-select: none;
+}
+
+.error-bag {
+  width: 135px;
+  height: 135px;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 35px;
+  font-size: 65px;
+  box-shadow:
+    0 20px 45px rgba(255, 153, 0, 0.25),
+    inset 0 2px 5px rgba(255, 255, 255, 0.25);
+  transform: rotate(-8deg);
+  animation: errorBagFloat 4s ease-in-out infinite;
+}
+
+.error-floating-icon {
+  width: 52px;
+  height: 52px;
+  position: absolute;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  color: var(--primary);
+  border: 1px solid var(--border);
+  border-radius: 17px;
+  font-size: 20px;
+  box-shadow: var(--shadow-md);
+  animation: errorIconFloat 4s ease-in-out infinite;
+}
+
+.floating-one {
+  top: 17%;
+  right: 18%;
+  transform: rotate(12deg);
+  animation-delay: 0.3s;
+}
+
+.floating-two {
+  bottom: 20%;
+  left: 13%;
+  transform: rotate(-12deg);
+  animation-delay: 0.8s;
+}
+
+.floating-three {
+  top: 23%;
+  left: 15%;
+  color: var(--danger);
+  transform: rotate(-10deg);
+  animation-delay: 1.2s;
+}
+
+.error-dot {
+  width: 10px;
+  height: 10px;
+  position: absolute;
+  border-radius: 50%;
+  background: var(--primary);
+  opacity: 0.7;
+}
+
+.dot-one {
+  right: 13%;
+  bottom: 32%;
+  width: 13px;
+  height: 13px;
+}
+
+.dot-two {
+  top: 12%;
+  left: 45%;
+  width: 8px;
+  height: 8px;
+}
+
+.dot-three {
+  bottom: 13%;
+  right: 42%;
+  width: 7px;
+  height: 7px;
+}
+
+.error-visual-caption {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 30px;
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.error-caption-line {
+  width: 28px;
+  height: 1px;
+  background: var(--primary);
+  opacity: 0.7;
+}
+
+/* =========================================
+   ERROR MESSAGE
+========================================= */
+
+.error-message {
+  max-width: 490px;
+}
+
+.error-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 13px;
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  background: var(--surface);
+  color: var(--text-secondary);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+}
+
+.error-label-dot {
+  width: 7px;
+  height: 7px;
+  background: var(--primary);
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px var(--primary-light);
+}
+
+.error-message h1 {
+  margin: 25px 0 17px;
+  color: var(--secondary);
+  font-size: clamp(37px, 4.5vw, 55px);
+  line-height: 1.16;
+  font-weight: 850;
+  letter-spacing: -2.3px;
+}
+
+.error-message h1 span {
+  color: var(--primary);
+}
+
+.error-description {
+  max-width: 440px;
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 15px;
+  line-height: 1.9;
+  font-weight: 400;
+}
+
+/* =========================================
+   ACTION BUTTONS
+========================================= */
+
+.error-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 13px;
+  margin-top: 30px;
+}
+
+.error-home-button,
+.error-back-button {
+  min-height: 51px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+  padding: 0 22px;
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    transform var(--transition),
+    background var(--transition),
+    box-shadow var(--transition),
+    color var(--transition);
+}
+
+.error-home-button {
+  background: var(--primary);
+  color: #fff;
+  border: 1px solid var(--primary);
+  box-shadow: 0 7px 18px rgba(255, 153, 0, 0.2);
+}
+
+.error-home-button:hover {
+  background: var(--primary-hover);
+  border-color: var(--primary-hover);
+  color: #fff;
+  transform: translateY(-3px);
+  box-shadow: 0 11px 23px rgba(255, 153, 0, 0.27);
+}
+
+.error-back-button {
+  background: var(--surface);
+  color: var(--secondary);
+  border: 1px solid var(--border);
+}
+
+.error-back-button:hover {
+  background: var(--secondary);
+  color: #fff;
+  border-color: var(--secondary);
+  transform: translateY(-3px);
+}
+
+.error-home-button svg,
+.error-back-button svg {
+  font-size: 15px;
+}
+
+/* =========================================
+   HELP CARD
+========================================= */
+
+.error-help {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin-top: 35px;
+  padding: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.error-help-icon {
+  flex-shrink: 0;
+  width: 43px;
+  height: 43px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary-light);
+  color: var(--primary);
+  border-radius: var(--radius-md);
+  font-size: 18px;
+}
+
+.error-help-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.error-help-text strong {
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.error-help-text span {
+  color: var(--text-muted);
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+.error-help-link {
+  flex-shrink: 0;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--background);
+  color: var(--primary);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.error-help-link:hover {
+  background: var(--primary);
+  color: #fff;
+  transform: translateX(-4px);
+}
+
+/* =========================================
+   BOTTOM
+========================================= */
+
+.error-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  padding-top: 22px;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.error-bottom strong {
+  color: var(--secondary);
+  font-weight: 800;
+}
+
+.error-bottom-divider {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--primary);
+}
+
+/* =========================================
+   ANIMATIONS
+========================================= */
+
+@keyframes errorBagFloat {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-8deg);
+  }
+
+  50% {
+    transform: translateY(-13px) rotate(-4deg);
+  }
+}
+
+@keyframes errorIconFloat {
+  0%,
+  100% {
+    margin-top: 0;
+  }
+
+  50% {
+    margin-top: -9px;
+  }
+}
+
+/* =========================================
+   RTL SUPPORT
+========================================= */
+
+[dir="rtl"] .error-page {
+  font-family: "Cairo", "Inter", sans-serif;
+}
+
+[dir="rtl"] .error-message h1 {
+  letter-spacing: 0;
+  line-height: 1.5;
+}
+
+[dir="rtl"] .error-description {
+  line-height: 2;
+}
+
+[dir="rtl"] .error-label {
+  letter-spacing: 0;
+}
+
+[dir="rtl"] .error-help-link svg {
+  transform: rotate(180deg);
+}
+
+[dir="rtl"] .error-back-button svg {
+  transform: rotate(180deg);
+}
+
+[dir="rtl"] .error-help-link:hover {
+  transform: translateX(4px);
+}
+
+/* =========================================
+   RESPONSIVE — TABLET
+========================================= */
+
+@media (max-width: 900px) {
+  .error-content {
+    gap: 35px;
+    padding: 55px 0 45px;
+  }
+
+  .error-visual-circle {
+    max-width: 360px;
+  }
+
+  .error-bag {
+    width: 110px;
+    height: 110px;
+    font-size: 53px;
+  }
+
+  .error-floating-icon {
+    width: 44px;
+    height: 44px;
+    font-size: 17px;
+  }
+
+  .error-message h1 {
+    font-size: clamp(34px, 5vw, 45px);
+  }
+
+  .error-description {
+    font-size: 13px;
+  }
+}
+
+/* =========================================
+   RESPONSIVE — MOBILE
+========================================= */
+
+@media (max-width: 650px) {
+  .error-page {
+    min-height: 100svh;
+    padding: 28px 20px 22px;
+  }
+
+  .error-content {
+    grid-template-columns: 1fr;
+    gap: 35px;
+    padding: 40px 0 35px;
+  }
+
+  .error-visual {
+    max-width: 350px;
+    margin: 0 auto;
+  }
+
+  .error-visual-circle {
+    width: min(100%, 310px);
+  }
+
+  .error-number {
+    font-size: 145px;
+    letter-spacing: -10px;
+  }
+
+  .error-bag {
+    width: 100px;
+    height: 100px;
+    border-radius: 27px;
+    font-size: 47px;
+  }
+
+  .error-floating-icon {
+    width: 41px;
+    height: 41px;
+    border-radius: 13px;
+    font-size: 16px;
+  }
+
+  .error-visual-caption {
+    margin-top: 20px;
+    font-size: 9px;
+  }
+
+  .error-message {
+    max-width: 100%;
+    text-align: center;
+  }
+
+  .error-message h1 {
+    margin-top: 21px;
+    font-size: clamp(35px, 8vw, 45px);
+    letter-spacing: -1.5px;
+  }
+
+  .error-description {
+    margin: 0 auto;
+    max-width: 470px;
+    font-size: 13px;
+    line-height: 1.85;
+  }
+
+  .error-actions {
+    justify-content: center;
+  }
+
+  .error-help {
+    text-align: left;
+  }
+
+  .error-bottom {
+    flex-wrap: wrap;
+    text-align: center;
+    line-height: 1.7;
+  }
+}
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 380px) {
+  .error-page {
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+
+  .error-brand-name {
+    font-size: 21px;
+  }
+
+  .error-content {
+    padding-top: 32px;
+    gap: 28px;
+  }
+
+  .error-visual-circle {
+    max-width: 265px;
+  }
+
+  .error-number {
+    font-size: 125px;
+  }
+
+  .error-bag {
+    width: 85px;
+    height: 85px;
+    font-size: 40px;
+  }
+
+  .error-message h1 {
+    font-size: 33px;
+  }
+
+  .error-home-button,
+  .error-back-button {
+    min-height: 47px;
+    padding: 0 15px;
+    font-size: 12px;
+  }
+
+  .error-help {
+    padding: 12px;
+    gap: 9px;
+  }
+
+  .error-help-text span {
+    font-size: 9px;
+  }
+}
+
+/* =========================================
+   REDUCED MOTION ACCESSIBILITY
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .error-page *,
+  .error-page *::before,
+  .error-page *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
