@@ -1,37 +1,43 @@
 # Nad Store | Shop Smarter
 
-A modern, full-featured e-commerce web application built with React, Firebase, and Stripe. Nad Store delivers a seamless shopping experience with secure authentication, dynamic product discovery, order management, and an administrative dashboard.
+A modern, full-featured e-commerce web application built with React, Firebase, and Stripe. Nad Store provides a seamless online shopping experience with secure authentication, dynamic product discovery, shopping cart management, payment processing, order tracking, and an administrative dashboard.
+
+🌐 **Live Demo:** [https://nad-store.pages.dev](https://nad-store.pages.dev)
 
 ## Overview
 
-Nad Store is a full-stack e-commerce project focused on building a practical, user-centered shopping experience while applying modern frontend engineering principles and integrating cloud-based backend services.
+Nad Store is a full-stack e-commerce application developed to deliver a practical, user-centered shopping experience while applying modern frontend engineering principles and integrating cloud-based backend services.
 
-The platform supports the complete shopping workflow, from browsing products and managing the shopping cart to checkout, payment processing, and order tracking.
+The platform covers the complete shopping journey, from browsing products and managing the shopping cart to checkout, payment processing, and order tracking.
+
+The project focuses on reusable component architecture, centralized state management, secure payment verification, responsive design, and real-world application workflows.
 
 ## Key Features
 
 - **Authentication & Authorization** — User registration, login, Google authentication, and protected routes.
-- **Product Discovery** — Dynamic product listings, category filtering, search suggestions, and product details.
-- **Shopping Cart** — Persistent cart state with quantity management and automatic price calculations.
+- **Product Discovery** — Dynamic product listings, category filtering, search suggestions, and detailed product pages.
+- **Shopping Cart** — Persistent cart state, quantity management, and automatic price calculations.
 - **Checkout & Payments** — Integrated Stripe payment flow.
-- **Payment Verification** — Stripe webhook integration through Cloudflare Workers to verify successful payments and update order records.
+- **Payment Verification** — Stripe webhook integration through Cloudflare Workers to verify successful payments and update Firestore order records.
 - **Order Management** — Order history, payment status, and order tracking.
 - **Admin Dashboard** — Protected administrative interface for managing store operations.
-- **Responsive UI** — Layouts optimized for desktop, tablet, and mobile devices.
-- **Bilingual Styling Support** — English and Arabic typography with RTL-aware styling.
+- **Responsive Design** — User interfaces optimized for desktop, tablet, and mobile devices.
+- **Arabic & English Styling Support** — RTL-aware styling and typography using Cairo and Inter fonts.
 
 ## Tech Stack
 
-| Category                | Technologies                             |
-| ----------------------- | ---------------------------------------- |
-| Frontend                | React, JavaScript, HTML5, CSS3           |
-| Routing                 | React Router                             |
-| Backend Services        | Firebase Authentication, Cloud Firestore |
-| Payments                | Stripe, Stripe Elements                  |
-| Webhook Infrastructure  | Cloudflare Workers                       |
-| UI & Data Visualization | Swiper, Recharts, React Icons            |
-| Notifications           | React Toastify                           |
-| Development Tools       | Git, GitHub, npm                         |
+| Category | Technologies |
+|---|---|
+| Frontend | React, JavaScript, HTML5, CSS3 |
+| Routing | React Router |
+| State Management | React Context API, useReducer |
+| Backend Services | Firebase Authentication, Cloud Firestore |
+| Payments | Stripe, Stripe Elements |
+| Webhook Infrastructure | Cloudflare Workers |
+| Hosting & Deployment | Cloudflare Pages |
+| UI & Data Visualization | Swiper, Recharts, React Icons |
+| Notifications | React Toastify |
+| Development Tools | Git, GitHub, npm |
 
 ## Architecture Highlights
 
@@ -40,8 +46,22 @@ The platform supports the complete shopping workflow, from browsing products and
 - Firebase integration for authentication and cloud data persistence.
 - Protected user and administrator routes.
 - Server-side payment event verification through a Cloudflare Worker.
-- Environment-based configuration for Firebase credentials and application settings.
+- Environment-based configuration for Firebase application settings.
 - Reusable CSS variables and shared styling conventions.
+- Automated deployment through GitHub integration with Cloudflare Pages.
+
+## Payment Architecture
+
+Nad Store integrates Stripe for payment processing.
+
+A dedicated Cloudflare Worker handles Stripe webhook events and:
+
+- Verifies Stripe webhook signatures.
+- Processes successful payment events.
+- Validates payment amounts against corresponding order records.
+- Updates Firestore payment and order statuses after successful verification.
+
+Sensitive Stripe credentials and webhook signing secrets are stored in Cloudflare Worker environment secrets and are not committed to the repository.
 
 ## Project Structure
 
@@ -84,7 +104,7 @@ src/
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/nad-store.git
+git clone https://github.com/NadirAhmedMohamed/nad-store.git
 ```
 
 2. Navigate to the project directory:
@@ -117,37 +137,54 @@ REACT_APP_FIREBASE_MEASUREMENT_ID=
 npm start
 ```
 
-The application will run at `http://localhost:3000`.
+The application will be available at:
 
-## Payment Integration
+```text
+http://localhost:3000
+```
 
-Nad Store integrates Stripe for payment processing.
+## Deployment
 
-A Cloudflare Worker handles Stripe webhook events, verifies webhook signatures, validates payment amounts, and updates corresponding Firestore order records after successful payment confirmation.
+The frontend application is deployed using Cloudflare Pages and connected directly to the GitHub repository.
 
-Sensitive credentials and webhook secrets are stored in environment variables and Cloudflare Worker secrets rather than committed to the repository.
+**Live Application:** [https://nad-store.pages.dev](https://nad-store.pages.dev)
+
+### Build Configuration
+
+| Setting | Value |
+|---|---|
+| Framework | Create React App |
+| Build Command | `npm run build` |
+| Build Output Directory | `build` |
+| Root Directory | `/` |
+
+Cloudflare Pages automatically builds and deploys updates pushed to the connected GitHub repository.
 
 ## Environment & Security
 
 - Never commit `.env.local` or private credentials.
-- Configure Firebase security rules before deployment.
+- Configure Firebase security rules before production use.
 - Restrict administrative access through appropriate authorization checks.
 - Keep Stripe secret keys and webhook signing secrets on the server side.
+- Never expose service account credentials in frontend code.
+- Use environment variables for application configuration.
 
 ## Project Status
 
-**In Progress — Preparing for Launch**
+**Live — Successfully Deployed**
 
-The core shopping, authentication, administration, and payment workflows have been implemented. Final deployment preparation, production configuration, and testing are ongoing.
+Nad Store is publicly deployed and accessible online.
+
+The core shopping, authentication, administration, and payment workflows have been implemented and tested.
 
 ## Author
 
 **Nadir Ahmed**  
 Frontend Developer | React.js
 
-- [Portfolio](https://portfolio-nadirahmed.netlify.app/)
-- [LinkedIn](https://www.linkedin.com/in/nadirahmed10/)
-- [GitHub](https://github.com/NadirAhmedMohamed)
+- **Portfolio:** [portfolio-nadirahmed.netlify.app](https://portfolio-nadirahmed.netlify.app/)
+- **LinkedIn:** [linkedin.com/in/nadirahmed10](https://www.linkedin.com/in/nadirahmed10/)
+- **GitHub:** [github.com/NadirAhmedMohamed](https://github.com/NadirAhmedMohamed)
 
 ---
 
