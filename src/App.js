@@ -2,7 +2,7 @@ import "./App.css";
 import "react-toastify/dist/ReactToastify.css";
 import "./Styles/toast.css";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 
@@ -30,17 +30,25 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 
 function App() {
-  const { dispatch } = useAuth();
+  const { beginBasketSession, initializeBasket, endBasketSession } = useAuth();
+
   const location = useLocation();
 
   const [searchTerm, setSearchTerm] = useState("");
-
-  const authRequestRef = useRef(0);
 
   const hideFooter =
     ["/login", "/register", "/admin-login", "/admin/login"].includes(
       location.pathname,
     ) || location.pathname.startsWith("/admin");
+
+  // Scroll to the top whenever the route changes.
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "auto",
+    });
+  }, [location.pathname]);
 
   // Keep the search input synchronized with the URL.
   useEffect(() => {
@@ -71,89 +79,43 @@ function App() {
     };
 
     const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
-      const requestId = ++authRequestRef.current;
+      if (!active) return;
 
-      const isCurrentRequest = () =>
-        active && requestId === authRequestRef.current;
-
-      dispatch({
-        type: "SET_BASKET_READY",
-        value: false,
-      });
-
+      // Handle logout and isolate the guest basket.
       if (!authUser) {
-        if (!isCurrentRequest()) return;
-
-        dispatch({
-          type: "SET_USER",
-          user: null,
-        });
-
-        dispatch({
-          type: "SET_BASKET",
-          basket: [],
-        });
-
-        dispatch({
-          type: "SET_BASKET_READY",
-          value: true,
-        });
-
+        endBasketSession();
         return;
       }
 
-      dispatch({
-        type: "SET_USER",
-        user: authUser,
-      });
-
-      const cachedBasket = getLocalBasket(authUser.uid);
+      // Start a new isolated session for this account.
+      const sessionVersion = beginBasketSession(authUser);
 
       try {
-        // Check whether this account is an admin.
-        const adminSnap = await getDoc(doc(db, "admins", authUser.uid));
-
-        if (!isCurrentRequest()) return;
-
-        if (
-          adminSnap.exists() &&
-          ["admin", "demo"].includes(adminSnap.data().role)
-        ) {
-          dispatch({
-            type: "SET_BASKET",
-            basket: [],
-          });
-
-          dispatch({
-            type: "SET_BASKET_READY",
-            value: true,
-          });
-
-          return;
-        }
-
-        // Load customer data.
+        // Load the user's Firestore document.
+        // Admin permissions are handled separately.
         const userRef = doc(db, "users", authUser.uid);
         const userSnap = await getDoc(userRef);
 
-        if (!isCurrentRequest()) return;
+        if (!active) return;
 
         let basket = [];
 
         if (userSnap.exists()) {
-          const data = userSnap.data();
+          const userData = userSnap.data();
 
-          if (Array.isArray(data.basket)) {
-            basket = data.basket;
+          if (Array.isArray(userData.basket)) {
+            // Preserve Firestore as the primary source of truth.
+            // An intentionally empty basket must remain empty.
+            basket = userData.basket;
           } else {
-            // Initialize missing basket field.
-            basket = cachedBasket;
+            // Use local storage only if the basket field is missing.
+            basket = getLocalBasket(authUser.uid);
 
             await setDoc(userRef, { basket }, { merge: true });
           }
         } else {
-          // Create a new customer document.
-          basket = cachedBasket;
+          // Create the customer document if it does not exist.
+          basket = getLocalBasket(authUser.uid);
 
           await setDoc(
             userRef,
@@ -166,37 +128,29 @@ function App() {
           );
         }
 
-        if (!isCurrentRequest()) return;
+        if (!active) return;
 
-        dispatch({
-          type: "SET_BASKET",
+        // Initialize only if this is still the current session.
+        const initialized = initializeBasket(
+          authUser.uid,
           basket,
-        });
+          sessionVersion,
+        );
 
-        try {
-          localStorage.setItem(
-            `basket_${authUser.uid}`,
-            JSON.stringify(basket),
-          );
-        } catch (storageError) {
-          console.error("Could not update local basket:", storageError);
+        if (initialized) {
+          try {
+            localStorage.setItem(
+              `basket_${authUser.uid}`,
+              JSON.stringify(basket),
+            );
+          } catch (storageError) {
+            console.error("Could not update local basket:", storageError);
+          }
         }
-
-        dispatch({
-          type: "SET_BASKET_READY",
-          value: true,
-        });
       } catch (error) {
         console.error("User initialization failed:", error);
 
-        if (!isCurrentRequest()) return;
-
-        // Do not allow basket operations when Firestore
-        // initialization has failed.
-        dispatch({
-          type: "SET_BASKET_READY",
-          value: false,
-        });
+        if (!active) return;
 
         toast.error(
           "Unable to synchronize your basket. Please check your connection and try again.",
@@ -209,10 +163,9 @@ function App() {
 
     return () => {
       active = false;
-      authRequestRef.current += 1;
       unsubscribe();
     };
-  }, [dispatch]);
+  }, [beginBasketSession, initializeBasket, endBasketSession]);
 
   return (
     <>

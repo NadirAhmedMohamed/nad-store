@@ -15,8 +15,17 @@ export const getBasketTotalPrice = (basket = []) => {
 
 export default function AppReducer(state = fallbackState, action) {
   switch (action.type) {
+    case "BEGIN_BASKET_SESSION": {
+      return {
+        ...state,
+        user: action.user || null,
+        basket: [],
+        isBasketReady: false,
+      };
+    }
+
     case "SET_USER": {
-      const nextUser = action.user;
+      const nextUser = action.user || null;
 
       const sameUser =
         state.user?.uid && nextUser?.uid && state.user.uid === nextUser.uid;
@@ -101,15 +110,11 @@ export default function AppReducer(state = fallbackState, action) {
         return state;
       }
 
-      const exists = state.basket.some(
-        (item) => String(item.id) === String(id),
-      );
-
-      if (!exists) return state;
-
       const currentItem = state.basket.find(
         (item) => String(item.id) === String(id),
       );
+
+      if (!currentItem) return state;
 
       if (Number(currentItem.quantity) === parsedQuantity) {
         return state;

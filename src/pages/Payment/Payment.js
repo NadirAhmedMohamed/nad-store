@@ -157,7 +157,6 @@ function StripeForm({
       await onSuccess(result.paymentIntent, verifiedTotal, data.orderId);
     } catch (error) {
       setCardError(error.message || "Payment failed. Please try again.");
-
       setProcessing(false);
     }
   };
@@ -171,7 +170,7 @@ function StripeForm({
       </div>
 
       {cardError && (
-        <p className="payment-error" role="alert">
+        <p className="payment-error" role="alert" aria-live="polite">
           {cardError}
         </p>
       )}
@@ -222,6 +221,8 @@ export default function Payment() {
       ...previous,
       [name]: value,
     }));
+
+    setError("");
   };
 
   const validateOrder = () => {
@@ -322,7 +323,6 @@ export default function Payment() {
         created: serverTimestamp(),
       });
 
-      // The order is already saved successfully.
       await clearBasketAfterOrder();
 
       toast.success("Your order has been placed successfully!", {
@@ -359,7 +359,6 @@ export default function Payment() {
       return;
     }
 
-    // Do not create another order if clearing the basket fails.
     await clearBasketAfterOrder();
 
     toast.success("Payment successful! Your order has been placed.", {
@@ -373,6 +372,11 @@ export default function Payment() {
         paymentIntentId: paymentIntent.id,
       },
     });
+  };
+
+  const handlePaymentMethodChange = (method) => {
+    setPayMethod(method);
+    setError("");
   };
 
   return (
@@ -408,147 +412,139 @@ export default function Payment() {
           </Link>
         </section>
       ) : (
-        <>
-          {error && (
-            <div className="payment-error payment-page-error" role="alert">
-              {error}
-            </div>
-          )}
+        <div className="payment-layout">
+          <div className="payment-main">
+            <section className="payment-section">
+              <div className="payment-section-heading">
+                <FaMapMarkerAlt />
+                <h2>Delivery Address</h2>
+              </div>
 
-          <div className="payment-layout">
-            <div className="payment-main">
-              <section className="payment-section">
-                <div className="payment-section-heading">
-                  <FaMapMarkerAlt />
-                  <h2>Delivery Address</h2>
-                </div>
+              {user?.email && (
+                <p className="payment-user-email">Signed in as {user.email}</p>
+              )}
 
-                {user?.email && (
-                  <p className="payment-user-email">
-                    Signed in as {user.email}
-                  </p>
-                )}
+              <div className="payment-address-grid">
+                <label className="payment-field">
+                  <span>Full name</span>
 
-                <div className="payment-address-grid">
-                  <label className="payment-field">
-                    <span>Full name</span>
+                  <input
+                    name="name"
+                    autoComplete="name"
+                    placeholder="Enter your full name"
+                    value={address.name}
+                    onChange={updateAddress}
+                    required
+                  />
+                </label>
 
-                    <input
-                      name="name"
-                      autoComplete="name"
-                      placeholder="Enter your full name"
-                      value={address.name}
-                      onChange={updateAddress}
-                      required
-                    />
-                  </label>
+                <label className="payment-field">
+                  <span>Phone number</span>
 
-                  <label className="payment-field">
-                    <span>Phone number</span>
+                  <input
+                    name="phone"
+                    type="tel"
+                    autoComplete="tel"
+                    placeholder="Enter your phone number"
+                    value={address.phone}
+                    onChange={updateAddress}
+                    required
+                  />
+                </label>
 
-                    <input
-                      name="phone"
-                      type="tel"
-                      autoComplete="tel"
-                      placeholder="Enter your phone number"
-                      value={address.phone}
-                      onChange={updateAddress}
-                      required
-                    />
-                  </label>
+                <label className="payment-field">
+                  <span>City</span>
 
-                  <label className="payment-field">
-                    <span>City</span>
+                  <input
+                    name="city"
+                    autoComplete="address-level2"
+                    placeholder="City"
+                    value={address.city}
+                    onChange={updateAddress}
+                    required
+                  />
+                </label>
 
-                    <input
-                      name="city"
-                      autoComplete="address-level2"
-                      placeholder="City"
-                      value={address.city}
-                      onChange={updateAddress}
-                      required
-                    />
-                  </label>
+                <label className="payment-field payment-address-full">
+                  <span>Address details</span>
 
-                  <label className="payment-field payment-address-full">
-                    <span>Address details</span>
+                  <textarea
+                    name="address"
+                    autoComplete="street-address"
+                    placeholder="Street, neighborhood, building..."
+                    value={address.address}
+                    onChange={updateAddress}
+                    rows={3}
+                    required
+                  />
+                </label>
+              </div>
+            </section>
 
-                    <textarea
-                      name="address"
-                      autoComplete="street-address"
-                      placeholder="Street, neighborhood, building..."
-                      value={address.address}
-                      onChange={updateAddress}
-                      rows={3}
-                      required
-                    />
-                  </label>
-                </div>
-              </section>
+            <section className="payment-section">
+              <div className="payment-section-heading">
+                <FaShoppingBag />
+                <h2>Review Your Order</h2>
+              </div>
 
-              <section className="payment-section">
-                <div className="payment-section-heading">
-                  <FaShoppingBag />
-                  <h2>Review Your Order</h2>
-                </div>
+              <div className="payment-review-list">
+                {basket.map((item) => (
+                  <CheckoutProduct
+                    key={item.id}
+                    id={item.id}
+                    title={item.title}
+                    description={item.description}
+                    price={item.price}
+                    rate={item.rate ?? item.rating}
+                    productImg={item.img || item.image}
+                    quantity={Math.max(1, Number(item.quantity) || 1)}
+                  />
+                ))}
+              </div>
+            </section>
 
-                <div className="payment-review-list">
-                  {basket.map((item) => (
-                    <CheckoutProduct
-                      key={item.id}
-                      id={item.id}
-                      title={item.title}
-                      description={item.description}
-                      price={item.price}
-                      rate={item.rate ?? item.rating}
-                      productImg={item.img || item.image}
-                      quantity={Math.max(1, Number(item.quantity) || 1)}
-                    />
-                  ))}
-                </div>
-              </section>
+            <section className="payment-section">
+              <div className="payment-section-heading">
+                <FaCreditCard />
+                <h2>Payment Method</h2>
+              </div>
 
-              <section className="payment-section">
-                <div className="payment-section-heading">
+              <div className="payment-method-options">
+                <button
+                  type="button"
+                  className={`payment-method-option ${
+                    payMethod === "cod" ? "selected" : ""
+                  }`}
+                  onClick={() => handlePaymentMethodChange("cod")}
+                  aria-pressed={payMethod === "cod"}
+                >
+                  <FaMoneyBillWave />
+
+                  <span>
+                    <strong>Cash on Delivery</strong>
+                    <small>Pay when your order arrives</small>
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  className={`payment-method-option ${
+                    payMethod === "stripe" ? "selected" : ""
+                  }`}
+                  onClick={() => handlePaymentMethodChange("stripe")}
+                  aria-pressed={payMethod === "stripe"}
+                >
                   <FaCreditCard />
-                  <h2>Payment Method</h2>
-                </div>
 
-                <div className="payment-method-options">
-                  <button
-                    type="button"
-                    className={`payment-method-option ${
-                      payMethod === "cod" ? "selected" : ""
-                    }`}
-                    onClick={() => setPayMethod("cod")}
-                    aria-pressed={payMethod === "cod"}
-                  >
-                    <FaMoneyBillWave />
+                  <span>
+                    <strong>Credit / Debit Card</strong>
+                    <small>Pay securely with Stripe</small>
+                  </span>
+                </button>
+              </div>
 
-                    <span>
-                      <strong>Cash on Delivery</strong>
-                      <small>Pay when your order arrives</small>
-                    </span>
-                  </button>
-
-                  <button
-                    type="button"
-                    className={`payment-method-option ${
-                      payMethod === "stripe" ? "selected" : ""
-                    }`}
-                    onClick={() => setPayMethod("stripe")}
-                    aria-pressed={payMethod === "stripe"}
-                  >
-                    <FaCreditCard />
-
-                    <span>
-                      <strong>Credit / Debit Card</strong>
-                      <small>Pay securely with Stripe</small>
-                    </span>
-                  </button>
-                </div>
-
-                {payMethod === "cod" ? (
+              {payMethod === "cod" ? (
+                <>
                   <form onSubmit={handleCODSubmit}>
                     <button
                       className="buy-btn"
@@ -560,7 +556,19 @@ export default function Payment() {
                         : `Place Order · $${total.toFixed(2)} · Cash on Delivery`}
                     </button>
                   </form>
-                ) : (
+
+                  {error && (
+                    <p
+                      className="payment-error"
+                      role="alert"
+                      aria-live="polite"
+                    >
+                      {error}
+                    </p>
+                  )}
+                </>
+              ) : (
+                <>
                   <Elements stripe={stripePromise}>
                     <StripeForm
                       total={total}
@@ -572,35 +580,45 @@ export default function Payment() {
                       onSuccess={handleStripeSuccess}
                     />
                   </Elements>
-                )}
-              </section>
+
+                  {error && (
+                    <p
+                      className="payment-error"
+                      role="alert"
+                      aria-live="polite"
+                    >
+                      {error}
+                    </p>
+                  )}
+                </>
+              )}
+            </section>
+          </div>
+
+          <aside className="payment-summary">
+            <h2>Order Summary</h2>
+
+            <div className="payment-summary-row">
+              <span>Items ({totalItems})</span>
+              <span>${total.toFixed(2)}</span>
             </div>
 
-            <aside className="payment-summary">
-              <h2>Order Summary</h2>
+            <div className="payment-summary-row">
+              <span>Shipping</span>
+              <span className="payment-free">FREE</span>
+            </div>
 
-              <div className="payment-summary-row">
-                <span>Items ({totalItems})</span>
-                <span>${total.toFixed(2)}</span>
-              </div>
+            <div className="payment-summary-total">
+              <span>Total</span>
+              <strong>${total.toFixed(2)}</strong>
+            </div>
 
-              <div className="payment-summary-row">
-                <span>Shipping</span>
-                <span className="payment-free">FREE</span>
-              </div>
-
-              <div className="payment-summary-total">
-                <span>Total</span>
-                <strong>${total.toFixed(2)}</strong>
-              </div>
-
-              <div className="payment-summary-security">
-                <FaLock />
-                <span>Secure checkout</span>
-              </div>
-            </aside>
-          </div>
-        </>
+            <div className="payment-summary-security">
+              <FaLock />
+              <span>Secure checkout</span>
+            </div>
+          </aside>
+        </div>
       )}
     </main>
   );
