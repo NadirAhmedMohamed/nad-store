@@ -1,6 +1,6 @@
-/* =========================================
-   NAD STORE — PREMIUM EDITORIAL HERO
-========================================= */
+/* ========================================
+   NAD STORE - BANNER
+======================================== */
 
 .banner {
   position: relative;
@@ -9,81 +9,74 @@
   background: var(--surface);
 }
 
-/* =========================================
-   SWIPER
-========================================= */
-
 .banner-swiper {
   width: 100%;
   height: 440px;
   overflow: hidden;
 }
 
-.banner-swiper .swiper-wrapper {
+.banner-swiper .swiper-wrapper,
+.banner-swiper .swiper-slide {
   height: 100%;
 }
 
 .banner-swiper .swiper-slide {
-  height: 100%;
   overflow: hidden;
 }
 
-/* =========================================
+/* ========================================
    SLIDE LAYOUT
-========================================= */
+======================================== */
 
 .banner-slide {
-  width: 100%;
-  height: 100%;
   display: grid;
   grid-template-columns: 0.95fr 1.05fr;
   align-items: center;
   gap: 40px;
+  height: 100%;
   padding: 35px 7%;
   background: var(--surface);
 }
 
-/* =========================================
+/* ========================================
    CONTENT
-========================================= */
+======================================== */
 
 .banner-content {
-  position: relative;
-  z-index: 2;
-  min-width: 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  justify-content: center;
+  gap: 16px;
 }
 
 .banner-tag {
   display: inline-flex;
   align-items: center;
   gap: 9px;
-  margin-bottom: 20px;
+  padding: 7px 15px;
+  border-radius: 30px;
   color: var(--primary);
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 1.8px;
+  background: var(--primary-light);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.7px;
 }
 
 .banner-tag-dot {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   flex-shrink: 0;
   border-radius: 50%;
   background: var(--primary);
-  box-shadow: 0 0 0 4px var(--primary-light);
 }
 
 .banner-content h1 {
-  max-width: 560px;
   margin: 0;
   color: var(--secondary);
-  font-size: clamp(34px, 3.7vw, 55px);
+  font-size: clamp(30px, 3.5vw, 48px);
+  line-height: 1.25;
   font-weight: 800;
-  line-height: 1.13;
-  letter-spacing: -1.8px;
 }
 
 .banner-highlight {
@@ -92,82 +85,83 @@
 }
 
 .banner-content p {
-  max-width: 410px;
-  margin: 20px 0 25px;
-  color: var(--text-muted);
-  font-size: 14px;
-  line-height: 1.9;
+  max-width: 480px;
+  margin: 0;
+  color: var(--text-secondary, #666);
+  font-size: 16px;
+  line-height: 1.8;
 }
 
-/* =========================================
-   CTA
-========================================= */
+/* ========================================
+   CTA BUTTON
+======================================== */
 
 .banner-cta {
-  min-height: 49px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 22px;
-  padding: 0 20px;
+  gap: 14px;
+  min-height: 48px;
+  padding: 0 25px;
   border: none;
-  border-radius: var(--radius-md);
+  border-radius: 8px;
   background: var(--primary);
   color: #fff;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 700;
+  cursor: pointer;
   transition:
-    background 0.25s ease,
-    transform 0.25s ease,
-    box-shadow 0.25s ease;
+    background 0.3s ease,
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .banner-cta:hover {
   background: var(--primary-hover);
   transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(255, 153, 0, 0.22);
+  box-shadow: 0 8px 20px rgba(255, 153, 0, 0.2);
 }
 
 .banner-cta-arrow {
-  font-size: 19px;
-  transition: transform 0.25s ease;
+  display: inline-block;
+  font-size: 20px;
+  line-height: 1;
+  transition: transform 0.3s ease;
 }
 
 .banner-cta:hover .banner-cta-arrow {
   transform: translateX(4px);
 }
 
-/* =========================================
-   TRUST MESSAGE
-========================================= */
+/* ========================================
+   TRUST TEXT
+======================================== */
 
 .banner-trust {
   display: flex;
   align-items: center;
-  gap: 11px;
-  margin-top: 24px;
-  color: var(--text-muted);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.2px;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 5px;
+  color: var(--text-secondary, #666);
+  font-size: 13px;
 }
 
 .banner-trust-line {
-  width: 27px;
+  width: 28px;
   height: 2px;
-  flex-shrink: 0;
+  border-radius: 5px;
   background: var(--primary);
 }
 
-/* =========================================
+/* ========================================
    IMAGE
-========================================= */
+======================================== */
 
 .banner-visual {
   position: relative;
   width: 100%;
   height: 340px;
-  min-width: 0;
 }
 
 .banner-image-frame {
@@ -176,11 +170,12 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
-  border-radius: 5px 55px 5px 55px;
+  border-radius: 5px 55px;
   background: var(--background);
 }
 
 .banner-image-frame img {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -191,16 +186,26 @@
   transform: scale(1.045);
 }
 
+/* ========================================
+   IMAGE DECORATION
+======================================== */
+
 .banner-image-decoration {
   position: absolute;
-  top: -13px;
-  right: -13px;
-  width: 105px;
-  height: 105px;
+  top: -12px;
+  right: -12px;
+  z-index: 0;
+  width: 100px;
+  height: 100px;
   border-top: 3px solid var(--primary);
   border-right: 3px solid var(--primary);
+  border-radius: 0 30px 0 0;
   pointer-events: none;
 }
+
+/* ========================================
+   IMAGE INDEX
+======================================== */
 
 .banner-image-index {
   position: absolute;
@@ -210,12 +215,13 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px 14px;
-  border-radius: 4px;
-  background: rgba(36, 36, 36, 0.85);
+  padding: 9px 14px;
+  border-radius: 6px;
+  background: rgba(36, 36, 36, 0.75);
   color: #fff;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
+  backdrop-filter: blur(6px);
 }
 
 .banner-index-divider {
@@ -224,83 +230,112 @@
   background: var(--primary);
 }
 
-/* =========================================
-   SEPARATE CONTROLS BAR
-========================================= */
+/* ========================================
+   CONTROLS
+======================================== */
 
 .banner-controls {
-  position: relative;
-  width: 100%;
-  min-height: 62px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   gap: 20px;
-  padding: 0 7%;
-  border-top: 1px solid var(--border);
-  background: var(--surface);
+  min-height: 62px;
+  padding: 10px 20px;
 }
-
-/* Pagination */
-
-.banner-pagination {
-  position: static !important;
-  width: auto !important;
-  display: flex;
-  align-items: center;
-  gap: 9px;
-}
-
-.banner-pagination .banner-bullet,
-.banner-pagination .swiper-pagination-bullet {
-  width: 8px;
-  height: 8px;
-  margin: 0 !important;
-  border-radius: 20px;
-  background: var(--text-muted);
-  opacity: 0.35;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.banner-pagination .swiper-pagination-bullet-active {
-  width: 27px;
-  background: var(--primary);
-  opacity: 1;
-}
-
-/* Navigation */
 
 .banner-navigation {
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: 10px;
 }
 
 .banner-nav-btn {
-  width: 36px;
-  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--border);
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--border, #e5e5e5);
   border-radius: 50%;
   background: var(--surface);
   color: var(--secondary);
-  font-size: 19px;
-  transition: all 0.25s ease;
+  font-size: 18px;
+  cursor: pointer;
+  transition:
+    background 0.3s ease,
+    color 0.3s ease,
+    transform 0.3s ease;
 }
 
 .banner-nav-btn:hover {
-  border-color: var(--primary);
   background: var(--primary);
   color: #fff;
   transform: translateY(-2px);
 }
 
-/* =========================================
+/* ========================================
+   PAGINATION
+   Transform-based animation
+======================================== */
+
+.banner-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.banner-pagination .swiper-pagination-bullet {
+  position: relative;
+  display: block;
+  width: 48px;
+  height: 5px;
+  margin: 0 !important;
+  overflow: hidden;
+  border-radius: 20px;
+  background: var(--secondary-light, #333);
+  opacity: 0.25;
+  cursor: pointer;
+  transform: scaleX(0.5);
+  transform-origin: center;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+}
+
+.banner-pagination .swiper-pagination-bullet-active {
+  opacity: 1;
+  transform: scaleX(1);
+  background: var(--primary);
+}
+
+.banner-pagination .swiper-pagination-bullet::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--primary);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.banner-pagination .swiper-pagination-bullet-active::after {
+  animation: nadSlideProgress 10s linear forwards;
+}
+
+@keyframes nadSlideProgress {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* ========================================
    TABLET
-========================================= */
+======================================== */
 
 @media (max-width: 1023px) {
   .banner-swiper {
@@ -308,39 +343,26 @@
   }
 
   .banner-slide {
-    grid-template-columns: 1fr 0.95fr;
     gap: 25px;
     padding: 30px 5%;
   }
 
+  .banner-visual {
+    height: 300px;
+  }
+
   .banner-content h1 {
-    font-size: clamp(30px, 4vw, 42px);
-    letter-spacing: -1.2px;
+    font-size: 34px;
   }
 
   .banner-content p {
-    max-width: 350px;
-    margin: 16px 0 20px;
-    font-size: 13px;
-  }
-
-  .banner-visual {
-    height: 290px;
-  }
-
-  .banner-trust {
-    margin-top: 20px;
-    font-size: 10px;
-  }
-
-  .banner-controls {
-    padding-inline: 5%;
+    font-size: 15px;
   }
 }
 
-/* =========================================
+/* ========================================
    MOBILE
-========================================= */
+======================================== */
 
 @media (max-width: 767px) {
   .banner-swiper {
@@ -349,60 +371,51 @@
 
   .banner-slide {
     grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr;
-    align-content: start;
-    gap: 25px;
-    padding: 25px 21px 20px;
+    grid-template-rows: auto 205px;
+    align-content: center;
+    gap: 22px;
+    padding: 25px 6%;
   }
 
   .banner-content {
-    width: 100%;
+    gap: 12px;
   }
 
   .banner-tag {
-    margin-bottom: 13px;
-    font-size: 10px;
-    letter-spacing: 1.4px;
+    padding: 6px 12px;
+    font-size: 12px;
   }
 
   .banner-content h1 {
-    font-size: clamp(31px, 8vw, 40px);
-    line-height: 1.12;
-    letter-spacing: -1.2px;
+    font-size: 29px;
+    line-height: 1.3;
   }
 
   .banner-content p {
-    max-width: 100%;
-    margin: 13px 0 17px;
-    font-size: 12px;
+    font-size: 14px;
     line-height: 1.7;
   }
 
   .banner-cta {
-    min-height: 44px;
-    padding-inline: 16px;
-    gap: 16px;
-    font-size: 12px;
+    min-height: 43px;
+    padding: 0 20px;
+    font-size: 14px;
   }
 
   .banner-trust {
-    margin-top: 16px;
-    font-size: 10px;
+    gap: 10px;
+    font-size: 12px;
   }
 
   .banner-visual {
-    width: 100%;
     height: 205px;
-    min-height: 0;
   }
 
   .banner-image-frame {
-    border-radius: 4px 35px 4px 35px;
+    border-radius: 5px 35px;
   }
 
   .banner-image-decoration {
-    top: -8px;
-    right: -7px;
     width: 65px;
     height: 65px;
   }
@@ -411,24 +424,27 @@
     right: 12px;
     bottom: 12px;
     padding: 7px 11px;
-    font-size: 10px;
+    font-size: 12px;
   }
 
   .banner-controls {
-    min-height: 56px;
-    padding-inline: 21px;
+    min-height: 55px;
+    gap: 12px;
+  }
+
+  .banner-pagination .swiper-pagination-bullet {
+    width: 38px;
   }
 
   .banner-nav-btn {
-    width: 33px;
-    height: 33px;
-    font-size: 17px;
+    width: 34px;
+    height: 34px;
   }
 }
 
-/* =========================================
+/* ========================================
    SMALL MOBILE
-========================================= */
+======================================== */
 
 @media (max-width: 380px) {
   .banner-swiper {
@@ -436,111 +452,43 @@
   }
 
   .banner-slide {
-    gap: 20px;
-    padding: 22px 17px 18px;
+    grid-template-rows: auto 190px;
+    gap: 18px;
+    padding: 20px 5%;
   }
 
   .banner-content h1 {
-    font-size: 30px;
+    font-size: 25px;
   }
 
   .banner-content p {
-    font-size: 11px;
+    font-size: 13px;
   }
 
   .banner-visual {
     height: 190px;
   }
 
-  .banner-controls {
-    padding-inline: 17px;
+  .banner-pagination .swiper-pagination-bullet {
+    width: 32px;
   }
 }
 
-/* =========================================
+/* ========================================
    REDUCED MOTION
-========================================= */
+======================================== */
 
 @media (prefers-reduced-motion: reduce) {
   .banner-image-frame img,
   .banner-cta,
+  .banner-cta-arrow,
   .banner-nav-btn,
   .banner-pagination .swiper-pagination-bullet {
-    transition: none;
-  }
-}
-
-/* =========================================
-   NAD STORE — SLIDE PROGRESS PAGINATION
-========================================= */
-
-.banner-pagination {
-  display: flex !important;
-  align-items: center;
-  gap: 9px;
-}
-
-.banner-pagination .swiper-pagination-bullet {
-  position: relative;
-  display: block;
-  width: 24px;
-  height: 5px;
-  margin: 0 !important;
-  overflow: hidden;
-  border-radius: 20px;
-  background: var(--border);
-  opacity: 1;
-  cursor: pointer;
-  transition:
-    width 0.3s ease,
-    background 0.3s ease;
-}
-
-.banner-pagination .swiper-pagination-bullet-active {
-  width: 48px;
-  background: var(--primary-light);
-  opacity: 1;
-}
-
-.banner-pagination .swiper-pagination-bullet-active::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  width: 0;
-  border-radius: inherit;
-  background: var(--primary);
-  animation: nadSlideProgress 5s linear forwards;
-}
-
-@keyframes nadSlideProgress {
-  from {
-    width: 0;
+    transition: none !important;
   }
 
-  to {
-    width: 100%;
-  }
-}
-
-/* Hover */
-
-.banner-pagination .swiper-pagination-bullet:hover {
-  background: var(--primary-light);
-}
-
-/* Mobile */
-
-@media (max-width: 767px) {
-  .banner-pagination {
-    gap: 7px;
-  }
-
-  .banner-pagination .swiper-pagination-bullet {
-    width: 18px;
-    height: 4px;
-  }
-
-  .banner-pagination .swiper-pagination-bullet-active {
-    width: 38px;
+  .banner-pagination .swiper-pagination-bullet-active::after {
+    animation: none !important;
+    transform: scaleX(1);
   }
 }

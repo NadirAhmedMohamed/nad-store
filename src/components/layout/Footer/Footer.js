@@ -18,12 +18,43 @@ import {
   FaCheckCircle,
 } from "react-icons/fa";
 
+import { FaLinkedinIn, FaGithub, FaGlobe } from "react-icons/fa";
+
+import { SiGmail } from "react-icons/si";
+
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   const email = "nader.a.j12@gmail.com";
   const phone = "+249128813679";
   const whatsapp = "249128813679";
+
+  const socialLinks = [
+    {
+      name: "LinkedIn",
+      icon: <FaLinkedinIn />,
+      url: "https://www.linkedin.com/in/nadirahmed10/",
+      className: "linkedin",
+    },
+    {
+      name: "Portfolio",
+      icon: <FaGlobe />,
+      url: "https://portfolio-nadirahmed.netlify.app/",
+      className: "portfolio",
+    },
+    {
+      name: "GitHub",
+      icon: <FaGithub />,
+      url: "https://github.com/NadirAhmedMohamed",
+      className: "github",
+    },
+    {
+      name: "Gmail",
+      icon: <SiGmail />,
+      url: `mailto:${email}`,
+      className: "gmail",
+    },
+  ];
 
   const handleBackToTop = () => {
     window.scrollTo({
@@ -34,10 +65,12 @@ const Footer = () => {
 
   return (
     <footer className="nad-footer">
-      {/* ================= TOP SECTION ================= */}
+      {/* TOP SECTION */}
 
       <div className="footer-top">
         <div className="footer-container footer-top-content">
+          {/* BRAND */}
+
           <div className="footer-brand">
             <Link to="/" className="footer-logo">
               <span className="footer-logo-icon">
@@ -59,9 +92,31 @@ const Footer = () => {
               <FaCheckCircle />
               <span>Your Shopping Destination</span>
             </div>
+
+            {/* SOCIAL LINKS */}
+
+            <div className="footer-social-section">
+              <h3 className="footer-social-title">Connect With Us</h3>
+
+              <div className="footer-social-links">
+                {socialLinks.map((social) => (
+                  <a
+                    key={social.name}
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`footer-social-link ${social.className}`}
+                    aria-label={social.name}
+                    title={social.name}
+                  >
+                    {social.icon}
+                  </a>
+                ))}
+              </div>
+            </div>
           </div>
 
-          {/* SHOP LINKS */}
+          {/* SHOP */}
 
           <div className="footer-column">
             <h3 className="footer-heading">Shop</h3>
@@ -123,7 +178,7 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* CONTACT INFORMATION */}
+          {/* CONTACT */}
 
           <div className="footer-column footer-contact-column">
             <h3 className="footer-heading">Get In Touch</h3>
@@ -171,7 +226,7 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* ================= FEATURES STRIP ================= */}
+      {/* FEATURES */}
 
       <div className="footer-features">
         <div className="footer-container footer-features-grid">
@@ -210,7 +265,7 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* ================= BOTTOM SECTION ================= */}
+      {/* BOTTOM */}
 
       <div className="footer-bottom">
         <div className="footer-container footer-bottom-content">

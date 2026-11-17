@@ -18,7 +18,7 @@ const slides = [
     description:
       "Discover incredible deals on products you'll love. Quality shopping starts here.",
     image:
-      "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1400&q=85",
+      "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1000&q=75",
     imageAlt: "Modern fashion retail collection",
     number: "01",
   },
@@ -30,7 +30,7 @@ const slides = [
     description:
       "Explore fresh arrivals and discover products selected to make every day better.",
     image:
-      "https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=1400&q=85",
+      "https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=1000&q=75",
     imageAlt: "Modern furniture and lifestyle collection",
     number: "02",
   },
@@ -42,7 +42,7 @@ const slides = [
     description:
       "Find the technology you need, with products designed to keep you connected.",
     image:
-      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1400&q=85",
+      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1000&q=75",
     imageAlt: "Premium headphones",
     number: "03",
   },
@@ -54,7 +54,7 @@ const slides = [
     description:
       "Explore styles that express your personality and bring your wardrobe to life.",
     image:
-      "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=1400&q=85",
+      "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=1000&q=75",
     imageAlt: "Fashion clothing collection",
     number: "04",
   },
@@ -84,7 +84,7 @@ export default function Banner() {
         loop={true}
         speed={800}
         autoplay={{
-          delay: 5000,
+          delay: 10000,
           disableOnInteraction: false,
           pauseOnMouseEnter: true,
           waitForTransition: true,
@@ -141,7 +141,9 @@ export default function Banner() {
                   <img
                     src={slide.image}
                     alt={slide.imageAlt}
-                    loading={index === 0 ? "eager" : "lazy"}
+                    loading={index <= 1 ? "eager" : "lazy"}
+                    fetchPriority={index <= 1 ? "high" : "low"}
+                    decoding="async"
                   />
                 </div>
 
@@ -158,7 +160,6 @@ export default function Banner() {
         ))}
       </Swiper>
 
-      {/* Separate navigation bar */}
       <div className="banner-controls">
         <div className="banner-pagination" ref={paginationRef} />
 

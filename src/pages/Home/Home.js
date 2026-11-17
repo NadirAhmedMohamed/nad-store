@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -11,6 +10,8 @@ import ProductSkeleton from "../../components/products/prductskeleton/ProductSke
 
 import useProducts from "../../hooks/useProducts";
 import useProductCategories from "../../hooks/useProductCategories";
+
+const SKELETON_COUNT = 12;
 
 export default function Home({ searchTerm = "", setSearchTerm }) {
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -110,9 +111,7 @@ export default function Home({ searchTerm = "", setSearchTerm }) {
       {hasActiveFilters && (
         <div className="active-filters">
           <div className="active-filters-info">
-            <span className="active-filters-label">
-              Showing products
-            </span>
+            <span className="active-filters-label">Showing products</span>
 
             {selectedCategory !== "all" && (
               <span className="active-filter-chip">
@@ -140,9 +139,10 @@ export default function Home({ searchTerm = "", setSearchTerm }) {
       <section
         className="home-products-container"
         aria-label="Available products"
+        aria-busy={loading}
       >
         {loading ? (
-          Array.from({ length: 8 }).map((_, index) => (
+          Array.from({ length: SKELETON_COUNT }).map((_, index) => (
             <ProductSkeleton key={index} />
           ))
         ) : products.length === 0 ? (
@@ -186,10 +186,7 @@ export default function Home({ searchTerm = "", setSearchTerm }) {
       </section>
 
       {!loading && products.length > 0 && (
-        <nav
-          className="products-pagination"
-          aria-label="Products pagination"
-        >
+        <nav className="products-pagination" aria-label="Products pagination">
           <button
             type="button"
             onClick={previousPage}

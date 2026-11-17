@@ -32,7 +32,7 @@ export default function useProducts({
 
   const normalizedSearch = searchTerm.trim().toLowerCase();
 
-  // Reset pagination when filters change.
+  // Reset products and pagination when filters change.
   useEffect(() => {
     cursorsRef.current = [null];
 
@@ -40,9 +40,12 @@ export default function useProducts({
     setProducts([]);
     setHasNextPage(false);
     setError("");
+
+    // Immediately show loading state.
+    setLoading(true);
   }, [category, normalizedSearch]);
 
-  // Fetch products.
+  // Fetch products from Firestore.
   const fetchProducts = useCallback(async () => {
     const requestId = ++requestIdRef.current;
 
@@ -60,7 +63,7 @@ export default function useProducts({
       // Sorting.
       constraints.push(orderBy("titleLower", "asc"));
 
-      // Search.
+      // Search filter.
       if (normalizedSearch) {
         constraints.push(
           startAt(normalizedSearch),
@@ -75,7 +78,7 @@ export default function useProducts({
         constraints.push(startAfter(cursor));
       }
 
-      // Fetch one extra document.
+      // Fetch one extra document to detect the next page.
       constraints.push(limit(PAGE_SIZE + 1));
 
       const productsQuery = query(collection(db, "products"), ...constraints);
@@ -89,10 +92,10 @@ export default function useProducts({
 
       const documents = snapshot.docs;
 
-      // Current page products.
+      // Get products for the current page.
       const visibleDocuments = documents.slice(0, PAGE_SIZE);
 
-      // Map Firestore documents to products.
+      // Remove duplicate document IDs.
       const uniqueProducts = Array.from(
         new Map(
           visibleDocuments.map((productDoc) => [
@@ -107,12 +110,12 @@ export default function useProducts({
 
       setProducts(uniqueProducts);
 
-      // Check next page.
+      // Check if another page exists.
       const hasMore = documents.length > PAGE_SIZE;
 
       setHasNextPage(hasMore);
 
-      // Save cursor for next page.
+      // Save the cursor for the next page.
       if (hasMore && visibleDocuments.length > 0) {
         cursorsRef.current[page] =
           visibleDocuments[visibleDocuments.length - 1];
@@ -136,7 +139,7 @@ export default function useProducts({
     }
   }, [category, normalizedSearch, page]);
 
-  // Fetch with debounce.
+  // Fetch products with a short debounce.
   useEffect(() => {
     const timer = setTimeout(() => {
       fetchProducts();
@@ -144,18 +147,20 @@ export default function useProducts({
 
     return () => {
       clearTimeout(timer);
+
+      // Invalidate any previous request.
       requestIdRef.current += 1;
     };
   }, [fetchProducts]);
 
-  // Next page.
+  // Navigate to the next page.
   const nextPage = useCallback(() => {
     if (hasNextPage && !loading) {
       setPage((current) => current + 1);
     }
   }, [hasNextPage, loading]);
 
-  // Previous page.
+  // Navigate to the previous page.
   const previousPage = useCallback(() => {
     if (page > 1 && !loading) {
       setPage((current) => current - 1);

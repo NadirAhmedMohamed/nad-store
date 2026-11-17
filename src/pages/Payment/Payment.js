@@ -6,9 +6,6 @@ import { useAuth } from "../../contexts/GlobalState";
 import CheckoutProduct from "../../components/cart/CheckoutProduct";
 
 import { Link, useNavigate } from "react-router-dom";
-import { db } from "../../firebase.config";
-
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 import { loadStripe } from "@stripe/stripe-js";
 import {
@@ -29,6 +26,8 @@ import {
   FaArrowLeft,
 } from "react-icons/fa";
 
+const WORKER_URL = "https://nad-store-payment.nader-a-j12.workers.dev";
+
 const stripePromise = loadStripe(
   "pk_test_51TXc3qHAMyAR8qmyYJjequdGNMe8WTTeR5AnfyvmQmvzEvQ9cefY654utL41UKHU939BqSnqMbDfrphbOsnWqeaw00k1QM6lp6",
 );
@@ -48,6 +47,41 @@ const cardStyle = {
     },
   },
 };
+
+function createRequestId() {
+  if (typeof crypto !== "undefined" && crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+
+  throw new Error("Secure request IDs are not supported by this browser.");
+}
+
+async function getWorkerResponse(path, user, payload) {
+  const idToken = await user.getIdToken();
+
+  const response = await fetch(`${WORKER_URL}${path}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${idToken}`,
+    },
+    body: JSON.stringify(payload),
+  });
+
+  let data;
+
+  try {
+    data = await response.json();
+  } catch {
+    throw new Error("Invalid response from payment server.");
+  }
+
+  if (!response.ok) {
+    throw new Error(data.error || "The server could not process your request.");
+  }
+
+  return data;
+}
 
 function StripeForm({
   total,
@@ -94,36 +128,19 @@ function StripeForm({
     setProcessing(true);
 
     try {
-      const idToken = await user.getIdToken();
+      const data = await getWorkerResponse("/", user, {
+        items: basket.map((item) => ({
+          id: String(item.id),
+          quantity: Math.max(1, Number(item.quantity) || 1),
+        })),
 
-      const response = await fetch(
-        "https://nad-store-payment.nader-a-j12.workers.dev/",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${idToken}`,
-          },
-          body: JSON.stringify({
-            items: basket.map((item) => ({
-              id: String(item.id),
-              quantity: Math.max(1, Number(item.quantity) || 1),
-            })),
-            customerInfo: {
-              name: customerInfo.name.trim(),
-              phone: customerInfo.phone.trim(),
-              city: customerInfo.city.trim(),
-              address: customerInfo.address.trim(),
-            },
-          }),
+        customerInfo: {
+          name: customerInfo.name.trim(),
+          phone: customerInfo.phone.trim(),
+          city: customerInfo.city.trim(),
+          address: customerInfo.address.trim(),
         },
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Unable to start payment.");
-      }
+      });
 
       if (
         !data.clientSecret ||
@@ -137,7 +154,9 @@ function StripeForm({
       const verifiedTotal = data.amount / 100;
 
       const result = await stripe.confirmCardPayment(data.clientSecret, {
-        payment_method: { card },
+        payment_method: {
+          card,
+        },
       });
 
       if (result.error) {
@@ -156,7 +175,10 @@ function StripeForm({
 
       await onSuccess(result.paymentIntent, verifiedTotal, data.orderId);
     } catch (error) {
+      console.error("Stripe payment failed:", error);
+
       setCardError(error.message || "Payment failed. Please try again.");
+
       setProcessing(false);
     }
   };
@@ -181,6 +203,7 @@ function StripeForm({
         disabled={!stripe || processing}
       >
         <FaLock />
+
         {processing ? "Processing payment..." : `Pay $${total.toFixed(2)}`}
       </button>
 
@@ -197,8 +220,13 @@ export default function Payment() {
   const navigate = useNavigate();
 
   const [processing, setProcessing] = useState(false);
+
   const [payMethod, setPayMethod] = useState("cod");
+
   const [error, setError] = useState("");
+
+  // Keep the same COD request ID when retrying the same order.
+  const [codRequestId] = useState(() => createRequestId());
 
   const [address, setAddress] = useState({
     name: user?.displayName || "",
@@ -226,6 +254,11 @@ export default function Payment() {
   };
 
   const validateOrder = () => {
+    if (!user) {
+      setError("Please sign in before placing your order.");
+      return false;
+    }
+
     if (!basket.length) {
       setError("Your basket is empty.");
       return false;
@@ -241,7 +274,7 @@ export default function Payment() {
       return false;
     }
 
-    if (total <= 0) {
+    if (!Number.isFinite(total) || total <= 0) {
       setError("The order total is invalid.");
       return false;
     }
@@ -249,8 +282,7 @@ export default function Payment() {
     return true;
   };
 
-  // Clear basket after the order has been successfully created.
-  // A basket-clearing failure must not make the customer repeat the order.
+  // Clear the basket only after the server confirms order creation.
   const clearBasketAfterOrder = async () => {
     try {
       const success = await emptyBasket();
@@ -275,53 +307,47 @@ export default function Payment() {
     }
   };
 
-  // Save Cash on Delivery order.
-  const saveOrderToFirebase = async (
-    paymentMethod,
-    paymentStatus,
-    orderStatus,
-    verifiedTotal = total,
-    paymentIntentId = null,
-  ) => {
+  /* ========================================
+     CASH ON DELIVERY
+  ======================================== */
+
+  const handleCODSubmit = async (e) => {
+    e.preventDefault();
+
     setError("");
 
-    if (!validateOrder()) return;
+    if (processing) return;
 
-    if (!user) {
-      setError("Please sign in before placing your order.");
-      return;
-    }
+    if (!validateOrder()) return;
 
     setProcessing(true);
 
     try {
-      const orderBasket = basket.map((item) => ({
-        id: item.id,
-        title: item.title,
-        price: Number(item.price) || 0,
-        quantity: Math.max(1, Number(item.quantity) || 1),
-        img: item.img || item.image || "",
-        category: item.category || "",
-      }));
+      const data = await getWorkerResponse("/create-cod-order", user, {
+        requestId: codRequestId,
 
-      await addDoc(collection(db, "orders"), {
-        userId: user.uid,
-        email: user.email || "",
-        basket: orderBasket,
-        amount: verifiedTotal,
-        totalItems,
+        items: basket.map((item) => ({
+          id: String(item.id),
+          quantity: Math.max(1, Number(item.quantity) || 1),
+        })),
+
         customerInfo: {
           name: address.name.trim(),
           phone: address.phone.trim(),
           city: address.city.trim(),
           address: address.address.trim(),
         },
-        paymentMethod,
-        paymentStatus,
-        paymentIntentId,
-        status: orderStatus,
-        created: serverTimestamp(),
       });
+
+      if (
+        !data.success ||
+        !data.orderId ||
+        !Number.isInteger(data.amount) ||
+        data.amount < 50 ||
+        data.paymentMethod !== "COD"
+      ) {
+        throw new Error("Invalid order confirmation received from server.");
+      }
 
       await clearBasketAfterOrder();
 
@@ -331,24 +357,23 @@ export default function Payment() {
 
       navigate("/orders", {
         replace: true,
+        state: {
+          orderId: data.orderId,
+        },
       });
     } catch (err) {
-      console.error("Order creation failed:", err);
+      console.error("COD order creation failed:", err);
 
-      setError(err.message || "Unable to save your order. Please try again.");
+      setError(err.message || "Unable to place your order. Please try again.");
 
       setProcessing(false);
     }
   };
 
-  const handleCODSubmit = async (e) => {
-    e.preventDefault();
+  /* ========================================
+     STRIPE SUCCESS
+  ======================================== */
 
-    await saveOrderToFirebase("COD", "pending_cash", "pending");
-  };
-
-  // Stripe Worker creates the order.
-  // The signed webhook confirms payment on the server.
   const handleStripeSuccess = async (paymentIntent, verifiedTotal, orderId) => {
     if (!paymentIntent?.id || !orderId || !verifiedTotal) {
       setError(
@@ -356,6 +381,7 @@ export default function Payment() {
       );
 
       setProcessing(false);
+
       return;
     }
 
@@ -517,6 +543,7 @@ export default function Payment() {
                   }`}
                   onClick={() => handlePaymentMethodChange("cod")}
                   aria-pressed={payMethod === "cod"}
+                  disabled={processing}
                 >
                   <FaMoneyBillWave />
 
@@ -533,6 +560,7 @@ export default function Payment() {
                   }`}
                   onClick={() => handlePaymentMethodChange("stripe")}
                   aria-pressed={payMethod === "stripe"}
+                  disabled={processing}
                 >
                   <FaCreditCard />
 

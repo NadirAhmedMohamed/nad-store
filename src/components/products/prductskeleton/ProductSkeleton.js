@@ -2,18 +2,21 @@ import "./ProductSkeleton.css";
 
 export default function ProductSkeleton() {
   return (
-    <div className="skeleton-card">
+    <article className="skeleton-card" aria-hidden="true">
+      <div className="skeleton-image" />
 
-      <div className="skeleton-image"></div>
+      <div className="skeleton-info">
+        <div className="skeleton-category" />
 
-      <div className="skeleton-title"></div>
+        <div className="skeleton-title" />
 
-      <div className="skeleton-description"></div>
+        <div className="skeleton-price-rate">
+          <div className="skeleton-price" />
+          <div className="skeleton-rating" />
+        </div>
+      </div>
 
-      <div className="skeleton-price"></div>
-
-      <div className="skeleton-button"></div>
-
-    </div>
+      <div className="skeleton-button" />
+    </article>
   );
 }
