@@ -1,12 +1,4 @@
-import { useRef } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Pagination, Navigation, EffectFade } from "swiper/modules";
-
-import "swiper/css";
-import "swiper/css/pagination";
-import "swiper/css/navigation";
-import "swiper/css/effect-fade";
-
+import { useEffect, useRef, useState } from "react";
 import "./Banner.css";
 
 const slides = [
@@ -60,10 +52,54 @@ const slides = [
   },
 ];
 
+const AUTOPLAY_DELAY = 10000;
+
 export default function Banner() {
-  const paginationRef = useRef(null);
-  const prevRef = useRef(null);
-  const nextRef = useRef(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const [isReducedMotion, setIsReducedMotion] = useState(false);
+  const touchStartX = useRef(null);
+
+  const goToSlide = (index) => {
+    setActiveIndex((index + slides.length) % slides.length);
+  };
+
+  const goToNext = () => {
+  setActiveIndex((current) => (current + 1) % slides.length);
+};
+
+
+  const goToPrevious = () => {
+  setActiveIndex(
+    (current) => (current - 1 + slides.length) % slides.length
+  );
+};
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    const updateMotionPreference = () => {
+      setIsReducedMotion(mediaQuery.matches);
+    };
+
+    updateMotionPreference();
+
+    mediaQuery.addEventListener("change", updateMotionPreference);
+
+    return () => {
+      mediaQuery.removeEventListener("change", updateMotionPreference);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isPaused || isReducedMotion) return;
+
+    const interval = window.setInterval(() => {
+      setActiveIndex((current) => (current + 1) % slides.length);
+    }, AUTOPLAY_DELAY);
+
+    return () => window.clearInterval(interval);
+  }, [isPaused, isReducedMotion]);
 
   const handleShopNow = () => {
     document.querySelector(".home-products-container")?.scrollIntoView({
@@ -72,102 +108,121 @@ export default function Banner() {
     });
   };
 
+  const handleTouchStart = (event) => {
+    touchStartX.current = event.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (event) => {
+    if (touchStartX.current === null) return;
+
+    const difference = touchStartX.current - event.changedTouches[0].clientX;
+
+    if (Math.abs(difference) > 50) {
+      difference > 0 ? goToNext() : goToPrevious();
+    }
+
+    touchStartX.current = null;
+  };
+
   return (
-    <section className="banner" aria-label="Featured collections">
-      <Swiper
-        className="banner-swiper"
-        modules={[Autoplay, Pagination, Navigation, EffectFade]}
-        effect="fade"
-        fadeEffect={{
-          crossFade: true,
-        }}
-        loop={true}
-        speed={800}
-        autoplay={{
-          delay: 10000,
-          disableOnInteraction: false,
-          pauseOnMouseEnter: true,
-          waitForTransition: true,
-        }}
-        pagination={{
-          clickable: true,
-          el: paginationRef.current,
-        }}
-        navigation={{
-          prevEl: prevRef.current,
-          nextEl: nextRef.current,
-        }}
-        onBeforeInit={(swiper) => {
-          swiper.params.pagination.el = paginationRef.current;
-          swiper.params.navigation.prevEl = prevRef.current;
-          swiper.params.navigation.nextEl = nextRef.current;
-        }}
-      >
+    <section
+      className="banner"
+      aria-label="Featured collections"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+      onFocus={() => setIsPaused(true)}
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) {
+          setIsPaused(false);
+        }
+      }}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
+      <div className="banner-swiper">
         {slides.map((slide, index) => (
-          <SwiperSlide key={slide.id}>
-            <div className="banner-slide">
-              <div className="banner-content">
-                <span className="banner-tag">
-                  <span className="banner-tag-dot" />
-                  {slide.tag}
+          <div
+            key={slide.id}
+            className={`banner-slide ${
+              index === activeIndex ? "banner-slide-active" : ""
+            }`}
+            aria-hidden={index !== activeIndex}
+            inert={index !== activeIndex}
+          >
+            <div className="banner-content">
+              <span className="banner-tag">
+                <span className="banner-tag-dot" />
+                {slide.tag}
+              </span>
+
+              <h1>
+                {slide.title}
+                <span className="banner-highlight">{slide.highlight}</span>
+              </h1>
+
+              <p>{slide.description}</p>
+
+              <button
+                type="button"
+                className="banner-cta"
+                onClick={handleShopNow}
+              >
+                <span>Explore Collection</span>
+                <span className="banner-cta-arrow" aria-hidden="true">
+                  →
                 </span>
+              </button>
 
-                <h1>
-                  {slide.title}
-                  <span className="banner-highlight">{slide.highlight}</span>
-                </h1>
-
-                <p>{slide.description}</p>
-
-                <button
-                  type="button"
-                  className="banner-cta"
-                  onClick={handleShopNow}
-                >
-                  <span>Explore Collection</span>
-                  <span className="banner-cta-arrow" aria-hidden="true">
-                    →
-                  </span>
-                </button>
-
-                <div className="banner-trust">
-                  <span className="banner-trust-line" />
-                  <span>Discover more. Shop smarter.</span>
-                </div>
-              </div>
-
-              <div className="banner-visual">
-                <div className="banner-image-frame">
-                  <img
-                    src={slide.image}
-                    alt={slide.imageAlt}
-                    loading={index <= 1 ? "eager" : "lazy"}
-                    fetchPriority={index <= 1 ? "high" : "low"}
-                    decoding="async"
-                  />
-                </div>
-
-                <span className="banner-image-decoration" />
-
-                <div className="banner-image-index">
-                  <span>{slide.number}</span>
-                  <span className="banner-index-divider" />
-                  <span>04</span>
-                </div>
+              <div className="banner-trust">
+                <span className="banner-trust-line" />
+                <span>Discover more. Shop smarter.</span>
               </div>
             </div>
-          </SwiperSlide>
+
+            <div className="banner-visual">
+              <div className="banner-image-frame">
+                <img
+                  src={slide.image}
+                  alt={slide.imageAlt}
+                  loading={index === 0 ? "eager" : "lazy"}
+                  fetchPriority={index === 0 ? "high" : "low"}
+                  decoding="async"
+                />
+              </div>
+
+              <span className="banner-image-decoration" />
+
+              <div className="banner-image-index">
+                <span>{slide.number}</span>
+                <span className="banner-index-divider" />
+                <span>04</span>
+              </div>
+            </div>
+          </div>
         ))}
-      </Swiper>
+      </div>
 
       <div className="banner-controls">
-        <div className="banner-pagination" ref={paginationRef} />
+        <div className="banner-pagination" aria-label="Choose a slide">
+          {slides.map((slide, index) => (
+            <button
+              key={slide.id}
+              type="button"
+              className={`banner-pagination-bullet ${
+                index === activeIndex ? "banner-pagination-bullet-active" : ""
+              }`}
+              onClick={() => goToSlide(index)}
+              aria-label={`Go to slide ${index + 1}`}
+              aria-current={index === activeIndex ? "true" : undefined}
+            />
+          ))}
+        </div>
 
         <div className="banner-navigation">
           <button
             type="button"
             className="banner-nav-btn"
-            ref={prevRef}
+            onClick={goToPrevious}
             aria-label="Previous slide"
           >
             ←
@@ -176,7 +231,7 @@ export default function Banner() {
           <button
             type="button"
             className="banner-nav-btn"
-            ref={nextRef}
+            onClick={goToNext}
             aria-label="Next slide"
           >
             →
