@@ -1,7 +1,4 @@
-
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap');
-
-@import './variables.css';
+@import "./variables.css";
 
 /* =========================
    RESET
@@ -23,7 +20,7 @@ body {
   min-width: 320px;
   background: var(--background);
   color: var(--text);
-  font-family: 'Inter', 'Cairo', sans-serif;
+  font-family: "Inter", "Cairo", sans-serif;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
@@ -31,7 +28,7 @@ body {
 /* Arabic text */
 [lang="ar"],
 [dir="rtl"] {
-  font-family: 'Cairo', 'Inter', sans-serif;
+  font-family: "Cairo", "Inter", sans-serif;
 }
 
 /* =========================
@@ -93,8 +90,6 @@ select {
     border-color var(--transition),
     box-shadow var(--transition);
 }
-
-
 
 /* SHARED PAGE LAYOUT */
 .page-container {
